@@ -13,6 +13,7 @@ import scala.ref.WeakReference
 case class LeakConfig(
     factory: ClassLoaderLeakPreventorFactory,
     logger: Logger,
+    enablePrevention: Boolean,
     enableDetection: Boolean,
     enableHeapDump: Boolean,
     heapDumpOutputDir: File)
@@ -40,7 +41,9 @@ class LeakFramework(framework: Framework, config: LeakConfig) extends Framework 
 private class LeakRunner(runner: Runner, testClassLoader: ClassLoader, config: LeakConfig) extends Runner {
   private[this] val preventor = config.factory.newLeakPreventor(testClassLoader)
 
-  preventor.runPreClassLoaderInitiators()
+  if (config.enablePrevention) {
+    preventor.runPreClassLoaderInitiators()
+  }
 
   def tasks(taskDefs: Array[TaskDef]) = runner.tasks(taskDefs)
   def args = runner.args
@@ -48,7 +51,9 @@ private class LeakRunner(runner: Runner, testClassLoader: ClassLoader, config: L
   def done(): String = {
     val summary = runner.done()
 
-    preventor.runCleanUps()
+    if (config.enablePrevention) {
+      preventor.runCleanUps()
+    }
 
     if (config.enableDetection) {
       // start leak detection on another thread

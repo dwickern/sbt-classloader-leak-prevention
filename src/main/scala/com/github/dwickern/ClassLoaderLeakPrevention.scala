@@ -8,6 +8,7 @@ import se.jiderhamn.classloader.leak.prevention.{Logger => LeakLogger}
 
 object ClassLoaderLeakPrevention extends AutoPlugin {
   trait AutoImportKeys {
+    lazy val enableLeakPrevention = settingKey[Boolean]("Whether to use automatic ClassLoader leak prevention")
     lazy val enableLeakDetection = settingKey[Boolean]("Whether to check for a leaking ClassLoader")
     lazy val enableLeakDetectionHeapDump = settingKey[Boolean]("Whether to create a heap dump when a ClassLoader leak is detected")
   }
@@ -22,6 +23,7 @@ object ClassLoaderLeakPrevention extends AutoPlugin {
   override def trigger = allRequirements
   override def requires = JvmPlugin
   override lazy val projectSettings = Seq(
+    enableLeakPrevention := true,
     enableLeakDetection := true,
     enableLeakDetectionHeapDump := false,
     logger := new SbtLeakLogger(streams.value.log("leak-prevention")),
@@ -35,6 +37,7 @@ object ClassLoaderLeakPrevention extends AutoPlugin {
       val config = LeakConfig(
         factory = factory.value,
         logger = logger.value,
+        enablePrevention = enableLeakPrevention.value,
         enableDetection = enableLeakDetection.value,
         enableHeapDump = enableLeakDetectionHeapDump.value,
         heapDumpOutputDir = heapDumpDirectory.value
