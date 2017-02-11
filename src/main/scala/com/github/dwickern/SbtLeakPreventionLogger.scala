@@ -4,7 +4,7 @@ import sbt.Logger
 import se.jiderhamn.classloader.leak.prevention.{Logger => LeakLogger}
 
 /** Redirect to the [[sbt.Logger]] */
-class SbtLeakLogger(logger: Logger) extends LeakLogger {
+class SbtLeakPreventionLogger(logger: Logger) extends LeakLogger {
   def warn(msg: String): Unit = logger.warn(msg)
   def warn(t: Throwable): Unit = logger.trace(t)
   def error(msg: String): Unit = logger.error(msg)

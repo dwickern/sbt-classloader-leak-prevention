@@ -1,10 +1,9 @@
 package com.github.dwickern
 
+import sbt.Keys._
 import sbt._
-import Keys._
 import sbt.plugins.JvmPlugin
-import se.jiderhamn.classloader.leak.prevention.ClassLoaderLeakPreventorFactory
-import se.jiderhamn.classloader.leak.prevention.{Logger => LeakLogger}
+import se.jiderhamn.classloader.leak.prevention.{ClassLoaderLeakPreventorFactory, Logger => LeakLogger}
 
 object ClassLoaderLeakPrevention extends AutoPlugin {
   trait AutoImportKeys {
@@ -16,6 +15,7 @@ object ClassLoaderLeakPrevention extends AutoPlugin {
     lazy val factory = taskKey[ClassLoaderLeakPreventorFactory]("Leak prevention configuration")
     lazy val logger = taskKey[LeakLogger]("Leak prevention logger")
     lazy val heapDumpDirectory = settingKey[File]("The directory to write the heap dump")
+    lazy val config = taskKey[LeakPreventionConfig]("Internal ClassLoader leak config")
   }
   object autoImport extends AutoImportKeys
   import Keys._
@@ -26,24 +26,25 @@ object ClassLoaderLeakPrevention extends AutoPlugin {
     enableLeakPrevention := true,
     enableLeakDetection := true,
     enableLeakDetectionHeapDump := false,
-    logger := new SbtLeakLogger(streams.value.log("leak-prevention")),
+    logger := new SbtLeakPreventionLogger(streams.value.log("leak-prevention")),
     factory := {
       val factory = new ClassLoaderLeakPreventorFactory()
       factory.setLogger(logger.value)
       factory
     },
+    config := LeakPreventionConfig(
+      factory = factory.value,
+      logger = logger.value,
+      enablePrevention = enableLeakPrevention.value,
+      enableDetection = enableLeakDetection.value,
+      enableHeapDump = enableLeakDetectionHeapDump.value,
+      heapDumpOutputDir = heapDumpDirectory.value
+    ),
     heapDumpDirectory := target.value,
     (loadedTestFrameworks in Test) := {
-      val config = LeakConfig(
-        factory = factory.value,
-        logger = logger.value,
-        enablePrevention = enableLeakPrevention.value,
-        enableDetection = enableLeakDetection.value,
-        enableHeapDump = enableLeakDetectionHeapDump.value,
-        heapDumpOutputDir = heapDumpDirectory.value
-      )
+      val c = config.value
       (loadedTestFrameworks in Test).value.map {
-        case (tf, f) => tf -> new LeakFramework(f, config)
+        case (tf, f) => tf -> new LeakPreventionTestFramework(f, c)
       }
     }
   )
