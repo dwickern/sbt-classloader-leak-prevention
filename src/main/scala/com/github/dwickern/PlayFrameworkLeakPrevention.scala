@@ -12,7 +12,7 @@ object PlayFrameworkLeakPrevention extends AutoPlugin {
   override def requires = play.sbt.Play && ClassLoaderLeakPrevention
   override def projectSettings = Seq(
     play.sbt.PlayInternalKeys.playReloaderClassLoader := {
-      val config = ClassLoaderLeakPrevention.Keys.config.value
+      val config = ClassLoaderLeakPrevention.InternalKeys.config.value
       new LeakPreventionCreator(config)
     },
     libraryDependencies ++= Seq(
