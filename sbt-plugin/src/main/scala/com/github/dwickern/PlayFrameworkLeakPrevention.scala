@@ -16,7 +16,7 @@ object PlayFrameworkLeakPrevention extends AutoPlugin {
       new LeakPreventionCreator(config)
     },
     libraryDependencies ++= Seq(
-      "com.github.dwickern" %% "playframework-leak-prevention" % "0.1-SNAPSHOT"
+      BuildInfo.playPluginName %% BuildInfo.playPluginOrganization % BuildInfo.playPluginVersion
     )
   )
 
