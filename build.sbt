@@ -1,14 +1,7 @@
-sbtPlugin := true
+organization in ThisBuild := "com.github.dwickern"
 
-name := "sbt-classloader-leak-prevention"
-
-organization := "com.github.dwickern"
-
-libraryDependencies ++= Seq(
-  "se.jiderhamn.classloader-leak-prevention" % "classloader-leak-prevention-core" % "2.2.0",
-  "se.jiderhamn" % "classloader-leak-test-framework" % "1.1.1"
-)
-
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.5.4")
-
-val play = project
+val `play-plugin` = project
+val `sbt-plugin` = project
+val root = (project in file("."))
+  .settings(publishArtifact := false)
+  .aggregate(`sbt-plugin`, `play-plugin`)

@@ -1,7 +1,5 @@
 name := "playframework-leak-prevention"
 
-organization := "com.github.dwickern"
-
 crossScalaVersions := Seq("2.11.8")
 scalaVersion := "2.11.8"
 
