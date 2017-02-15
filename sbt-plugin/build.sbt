@@ -18,3 +18,8 @@ buildInfoKeys := Seq[BuildInfoKey](
   BuildInfoKey.map(name in `play-plugin`)("playPluginName" -> _._2),
   BuildInfoKey.map(version in `play-plugin`)("playPluginVersion" -> _._2)
 )
+
+scriptedSettings
+scriptedLaunchOpts += s"-Dplugin.version=${version.value}"
+scriptedRun := scriptedRun.dependsOn(publishLocal in `play-plugin`).value
+scriptedBufferLog := false
