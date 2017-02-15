@@ -36,7 +36,7 @@ private class LeakDetectionThread private (classLoader: WeakReference[ClassLoade
       config.logger.error("ClassLoader leak detected! Writing heap dump to: " + out.getAbsolutePath)
       HeapDumper.dumpHeap(out, false)
     } else if (classLoader.get.isDefined) {
-      config.logger.error("ClassLoader leak detected! To generate a heap dump, `set enableLeakDetectionHeapDump := true`")
+      config.logger.error("ClassLoader leak detected! To generate a heap dump, `set ClassLoaderLeakPreventor.enableLeakDetectionHeapDump := true`")
     } else {
       config.logger.debug("No ClassLoader leak was detected.")
     }
