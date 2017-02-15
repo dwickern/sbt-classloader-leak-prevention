@@ -12,7 +12,7 @@ An sbt plugin to fix `java.lang.OutOfMemoryError: Metaspace/PermGen` errors duri
 
 Add the following line to your `project/plugins.sbt`:
 ```
-addSbtPlugin("com.github.dwickern" % "sbt-classloader-leak-prevention" % "0.2")
+addSbtPlugin("com.github.dwickern" % "sbt-classloader-leak-prevention" % "0.3")
 ```
 
 # Configuration
