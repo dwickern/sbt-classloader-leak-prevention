@@ -30,3 +30,18 @@ addSbtPlugin("com.github.dwickern" % "sbt-classloader-leak-prevention" % "0.4")
 | ClassLoaderLeakPreventor.startOracleTimeoutThread     | Boolean         | true       | Whether to force the Oracle JDBC timer thread to start
 | ClassLoaderLeakPreventor.threadWait                   | FiniteDuration  | 5.seconds  | How long to wait for threads to finish before stopping them
 | ClassLoaderLeakPreventor.shutdownHookWait             | FiniteDuration  | 10.seconds | How long to wait for shutdown hooks to finish before stopping them
+
+# Development
+
+To run tests:
+
+    sbt scripted
+
+To publish locally:
+
+    sbt publishLocal
+
+To publish to maven central (requires authorization):
+
+    sbt release
+    
