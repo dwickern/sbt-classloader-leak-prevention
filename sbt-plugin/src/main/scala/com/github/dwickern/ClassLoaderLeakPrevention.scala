@@ -13,6 +13,8 @@ object ClassLoaderLeakPrevention extends AutoPlugin {
   object Keys {
     lazy val enableLeakPrevention = settingKey[Boolean]("Whether to use automatic ClassLoader leak prevention")
     lazy val enableLeakDetection = settingKey[Boolean]("Whether to check for a leaking ClassLoader")
+    lazy val leakDetectionAttempts = settingKey[Int]("Maximum number of leak detection attempts")
+    lazy val leakDetectionInterval = settingKey[FiniteDuration]("How long to wait between leak detection attempts")
     lazy val enableLeakDetectionHeapDump = settingKey[Boolean]("Whether to create a heap dump when a ClassLoader leak is detected")
     lazy val stopThreads = settingKey[Boolean]("Whether to force threads to stop")
     lazy val stopTimerThreads = settingKey[Boolean]("Whether to force timer threads to stop")
@@ -38,6 +40,8 @@ object ClassLoaderLeakPrevention extends AutoPlugin {
   override lazy val projectSettings = Seq(
     enableLeakPrevention := true,
     enableLeakDetection := true,
+    leakDetectionAttempts := 5,
+    leakDetectionInterval := 2.seconds,
     enableLeakDetectionHeapDump := false,
     stopThreads := true,
     stopTimerThreads := true,
@@ -69,6 +73,8 @@ object ClassLoaderLeakPrevention extends AutoPlugin {
       logger = logger.value,
       enablePrevention = enableLeakPrevention.value,
       enableDetection = enableLeakDetection.value,
+      detectionAttempts = leakDetectionAttempts.value,
+      detectionInterval = leakDetectionInterval.value,
       enableHeapDump = enableLeakDetectionHeapDump.value,
       heapDumpOutputDir = heapDumpDirectory.value
     ),

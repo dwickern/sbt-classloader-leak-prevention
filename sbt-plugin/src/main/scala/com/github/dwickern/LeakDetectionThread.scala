@@ -24,8 +24,8 @@ private class LeakDetectionThread private (classLoader: WeakReference[ClassLoade
   setContextClassLoader(null)
 
   override def run(): Unit = {
-    for (_ <- 1 to 3 if classLoader.get.isDefined) {
-      Thread.sleep(1000)
+    for (_ <- 1 to config.detectionAttempts if classLoader.get.isDefined) {
+      Thread.sleep(config.detectionInterval.toMillis)
       ClassLoaderLeakPreventor.gc()
     }
 

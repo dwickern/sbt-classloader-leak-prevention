@@ -21,6 +21,8 @@ addSbtPlugin("com.github.dwickern" % "sbt-classloader-leak-prevention" % "0.3")
 | ----------------------------------------------------- | --------------- | ---------- | ------------------------------------------------------------------- |
 | ClassLoaderLeakPreventor.enableLeakPrevention         | Boolean         | true       | Whether to use automatic ClassLoader leak prevention
 | ClassLoaderLeakPreventor.enableLeakDetection          | Boolean         | true       | Whether to check for a leaking ClassLoader
+| ClassLoaderLeakPreventor.leakDetectionAttempts        | Int             | 5          | Maximum number of leak detection attempts
+| ClassLoaderLeakPreventor.leakDetectionInterval        | FiniteDuration  | 2.seconds  | How long to wait between leak detection attempts
 | ClassLoaderLeakPreventor.enableLeakDetectionHeapDump  | Boolean         | false      | Whether to create a heap dump when a ClassLoader leak is detected
 | ClassLoaderLeakPreventor.stopThreads                  | Boolean         | true       | Whether to force threads to stop
 | ClassLoaderLeakPreventor.stopTimerThreads             | Boolean         | true       | Whether to force timer threads to stop
